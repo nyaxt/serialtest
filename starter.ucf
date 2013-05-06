@@ -1,0 +1,5 @@
+NET "rst" LOC="M13";
+NET "clk" LOC="T9";
+NET "btn" LOC="K13";
+
+NET "tx" LOC="R13";
