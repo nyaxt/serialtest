@@ -1,0 +1,10 @@
+dump: serialtx_t.lxt
+	gtkwave serialtx_t.lxt &
+
+runsim: serialtx_t.lxt
+
+serialtx_t.lxt: serialtx_t.vvp
+	vvp $< -lxt2
+
+serialtx_t.vvp: serialtx_t.v serialtx.v
+	iverilog -o $@ $^

@@ -7,6 +7,7 @@ module serialtx(
 	input txe);
 
 reg [21:0] baudcounter;
+initial baudcounter = 21'd0;
 //wire baudtick = (baudcounter == 21'd1666666);
 wire baudtick = (baudcounter == 21'd166);
 
@@ -17,6 +18,7 @@ always @(posedge clk)
     baudcounter <= baudcounter + 1;
 
 reg [3:0] state;
+initial state = 4'h0;
 
 // advance state
 always @(posedge clk)
