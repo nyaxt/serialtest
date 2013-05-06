@@ -2,9 +2,12 @@
 
 module top(
     output tx,
+	 output led,
     input clk,
     input btn
     );
+
+assign led = ~tx;
 
 wire [7:0] data;
 wire txe;

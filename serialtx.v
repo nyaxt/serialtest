@@ -6,10 +6,9 @@ module serialtx(
 	input [7:0] data,
 	input txe);
 
-reg [21:0] baudcounter;
-initial baudcounter = 21'd0;
-//wire baudtick = (baudcounter == 21'd1666666);
-wire baudtick = (baudcounter == 21'd166);
+reg [12:0] baudcounter;
+initial baudcounter = 0;
+wire baudtick = (baudcounter == 5208);
 
 always @(posedge clk)
   if(baudtick)
@@ -31,22 +30,20 @@ always @(posedge clk)
       state <= state + 1;
 
 // output tx
-always @(state[3:0])
+always @(state[3:0] or data[7:0])
   casex(state[3:0])
      0: tx <= 1'b1; // idle 1
 	  1: tx <= 1'b1; // rts
      2: tx <= 1'b0; // start bit
-	  3: tx <= data[7];
-	  4: tx <= data[6];
-	  5: tx <= data[5];
-	  6: tx <= data[4];
-	  7: tx <= data[3];
-	  8: tx <= data[2];
-	  9: tx <= data[1];
-	 10: tx <= data[0];
+	  3: tx <= data[0];
+	  4: tx <= data[1];
+	  5: tx <= data[2];
+	  6: tx <= data[3];
+	  7: tx <= data[4];
+	  8: tx <= data[5];
+	  9: tx <= data[6];
+	 10: tx <= data[7];
 	 11: tx <= 1'b1; // end bit
   endcase
 
 endmodule
-
-
