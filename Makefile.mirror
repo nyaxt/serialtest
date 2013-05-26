@@ -1,0 +1,10 @@
+dump: mirror_t.lxt
+	gtkwave mirror_t.lxt &
+
+runsim: mirror_t.lxt
+
+mirror_t.lxt: mirror_t.vvp
+	vvp $< -lxt2
+
+mirror_t.vvp: mirror.v mirror_t.v serial.v
+	iverilog -o $@ $^
