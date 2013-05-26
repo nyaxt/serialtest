@@ -1,10 +1,10 @@
-dump: top_t.lxt
-	gtkwave top_t.lxt
+dump: serial_t.lxt
+	gtkwave serial_t.lxt &
 
-runsim: top_t.lxt
+runsim: serial_t.lxt
 
-top_t.lxt: top_t.vvp
+serial_t.lxt: serial_t.vvp
 	vvp $< -lxt2
 
-top_t.vvp: top_t.v top.v serialtx.v yes.v
+serial_t.vvp: serial.v serial_t.v
 	iverilog -o $@ $^

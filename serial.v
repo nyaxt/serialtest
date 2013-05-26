@@ -1,20 +1,33 @@
 `timescale 1ns / 1ps
 
-module serialtx(
-        output reg tx,
-        input clk,
-        input [7:0] data,
-        input txe);
+module serial(
+    output reg tx,
+    input clk,
+    input [7:0] data,
+    input txe
+    );
+parameter CLK_FREQ = 50_000_000;
+parameter BAUD = 9600;
+parameter CLK_MUL = CLK_FREQ / (BAUD * 16);
+parameter CLK_MUL_WIDTH = $ceil($log10(CLK_MUL)/$log10(2));
 
-reg [12:0] baudcounter;
+reg [(CLK_MUL_WIDTH-1):0] baudcounter;
 initial baudcounter = 0;
-wire baudtick = (baudcounter == 5208);
+wire baudtick16 = (baudcounter == CLK_MUL);
 
 always @(posedge clk)
-    if(baudtick)
+    if(baudtick16)
         baudcounter <= 0;
     else
         baudcounter <= baudcounter + 1;
+
+reg [3:0] baudcounter2;
+initial baudcounter2 = 0;
+wire baudtick = baudtick16 & (baudcounter2 == 4'hf);
+always @(posedge clk)
+    if(baudtick16) begin
+        baudcounter2 <= baudcounter2 + 1;
+    end
 
 reg [3:0] state;
 initial state = 4'h0;
