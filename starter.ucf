@@ -1,5 +1,7 @@
 NET "clk" LOC="T9";
-NET "btn" LOC="M13";
+NET "rst" LOC="M13";
+NET "led" LOC="P11";
+NET "led2" LOC="P12";
 
 NET "tx" LOC="R13";
-NET "led" LOC="K12";
+NET "rx" LOC="T13";

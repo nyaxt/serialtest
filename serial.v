@@ -14,7 +14,7 @@ module serial(
 parameter CLK_FREQ = 50_000_000;
 parameter BAUD = 9600;
 parameter CLK_MUL = CLK_FREQ / (BAUD * 16);
-parameter CLK_MUL_WIDTH = $ceil($log10(CLK_MUL)/$log10(2));
+parameter CLK_MUL_WIDTH = 15; //$ceil($log10(CLK_MUL)/$log10(2));
 
 // clk multiplier: baudtick16 / baudtick
 reg [(CLK_MUL_WIDTH-1):0] baudcounter;
@@ -42,7 +42,7 @@ reg [3:0] tx_state;
 // advance tx_state
 always @(posedge clk)
     if(rst)
-        tx_state = 4'h0;
+        tx_state <= 4'h0;
     else if(txe) begin
         tx_state <= 4'h1;
         dat_t_ff <= dat_t;
@@ -53,7 +53,7 @@ always @(posedge clk)
             tx_state <= tx_state + 1;
 
 // output tx
-always @(tx_state[3:0] or dat_t[7:0])
+always @(tx_state[3:0] or dat_t_ff[7:0])
     casex(tx_state[3:0])
         0: tx <= 1'b1; // idle 1
         1: tx <= 1'b1; // rts
@@ -67,6 +67,7 @@ always @(tx_state[3:0] or dat_t[7:0])
         9: tx <= dat_t_ff[6];
         10: tx <= dat_t_ff[7];
         11: tx <= 1'b1; // end bit
+		  default: tx <= 1'b1;
     endcase
 
 // ====== Rx ======
@@ -103,13 +104,14 @@ always @(posedge clk) begin
                 // end of cycle
                 9: begin
                     rx_active <= 0;
+						  ready <= 1;
                 end
                 default: begin
                     dat_r <= {rx, dat_r[7:1]};
 
                     // set ready on last bit recv
-                    if(rx_counter[7:4] == 8)
-                        ready <= 1;
+                    // if(rx_counter[7:4] == 8)
+                        
                 end 
             endcase
         end

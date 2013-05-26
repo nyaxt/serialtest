@@ -4,13 +4,18 @@ module mirror(
     input clk,
     input rst,
     input rx,
-    output tx
+    output tx,
+	 output led,
+	 output led2
 );
 
 wire [7:0] dat;
 
 reg txe;
 reg ready_rst;
+
+assign led = ~rx;
+assign led2 = ~tx;
 
 serial serial(
     .tx(tx),
