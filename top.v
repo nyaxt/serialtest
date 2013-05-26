@@ -2,7 +2,7 @@
 
 module top(
     output tx,
-	 output led,
+	output led,
     input clk,
     input btn
     );
