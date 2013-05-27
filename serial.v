@@ -67,7 +67,7 @@ always @(tx_state[3:0] or dat_t_ff[7:0])
         9: tx <= dat_t_ff[6];
         10: tx <= dat_t_ff[7];
         11: tx <= 1'b1; // end bit
-		  default: tx <= 1'b1;
+        default: tx <= 1'b1;
     endcase
 
 // ====== Rx ======
@@ -104,14 +104,13 @@ always @(posedge clk) begin
                 // end of cycle
                 9: begin
                     rx_active <= 0;
-						  ready <= 1;
                 end
                 default: begin
                     dat_r <= {rx, dat_r[7:1]};
 
                     // set ready on last bit recv
-                    // if(rx_counter[7:4] == 8)
-                        
+                    if(rx_counter[7:4] == 8)
+                        ready <= 1;
                 end 
             endcase
         end
