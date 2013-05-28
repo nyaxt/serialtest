@@ -3,7 +3,7 @@
 module serial(
     output reg tx,
     output reg [7:0] dat_r,
-    output reg ready,
+    output ready,
     input clk,
     input rst,
     input rx,
@@ -73,22 +73,24 @@ always @(tx_state[3:0] or dat_t_ff[7:0])
 // ====== Rx ======
 reg rx_active;
 reg [7:0] rx_counter;
+reg ready_ff;
+assign ready = ready_ff & ~ready_rst;
 
 always @(posedge clk) begin
     if(ready_rst)
-        ready <= 0;
+        ready_ff <= 0;
 
     if(rst) begin
         rx_active <= 0;
         rx_counter <= 8'h00;
         dat_r <= 8'h0;
-        ready <= 0;
+        ready_ff <= 0;
     end else if(!rx_active) begin
         // start bit
         if(rx == 1'b0) begin
             rx_active <= 1;
             rx_counter <= 8'h00;
-            ready <= 0;
+            ready_ff <= 0;
         end
     end else if(baudtick16) begin
         rx_counter <= rx_counter + 1;
@@ -110,7 +112,7 @@ always @(posedge clk) begin
 
                     // set ready on last bit recv
                     if(rx_counter[7:4] == 8)
-                        ready <= 1;
+                        ready_ff <= 1;
                 end 
             endcase
         end

@@ -6,5 +6,5 @@ runsim: serial_wb_if_t.lxt
 serial_wb_if_t.lxt: serial_wb_if_t.vvp
 	vvp $< -lxt2
 
-serial_wb_if_t.vvp: serial_wb_if.v serial_wb_if_t.v serial.v
+serial_wb_if_t.vvp: serial_wb_if.v serial_wb_if_t.v serial.v csr.v
 	iverilog -o $@ $^
